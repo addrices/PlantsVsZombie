@@ -1,5 +1,4 @@
 #include "Map.hpp"
-#include "Store.hpp"
 #include <ncurses.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -8,10 +7,8 @@
 class GameControl{
 private:
     int Zombie_num;
-    int sunny_energy;
     int score;
     Map map;
-    Store store;
     int State;
     int second;
     Button Ready_start;
@@ -67,6 +64,20 @@ private:
                 map.show_init();
             }
             map.show();
+        }else if(State == ENDING){
+            int startx, starty;
+            int win_width,win_height;
+            win_width = 20;
+            win_height = 5;
+            starty = (HEIGHT - win_height)/2 + 10;
+            startx = (WIDTH - win_width)/2;
+            WINDOW *ending_win = newwin(win_height, win_width, starty, startx);
+            box(ending_win, 0 , 0);
+            wrefresh(ending_win);
+            mvprintw(starty+1,startx+3,"Game Over");
+            mvprintw(starty+2,startx+3,"Click to return");
+            mvprintw(starty+3,startx+3,"score:%d",score);
+
         }
         refresh();
     };
@@ -78,6 +89,7 @@ private:
         if(State == READY){
             if (y >= Ready_start.starty && y <= Ready_start.endy && x >= Ready_start.startx && x <= Ready_start.endx){
                 State = GAMING;
+                second = 0;
                 start_Gaming_flag = true;
             }
             else if (y >= Ready_exit.starty && y <= Ready_exit.endy && x >= Ready_exit.startx && x <= Ready_exit.endx){
@@ -87,13 +99,15 @@ private:
         }
         else if(State == GAMING){
             
+        }else if(State == ENDING){
+            clear();
+            State = READY;
         }
     };
 public:
     GameControl():map(ROW,COLUMN){
         Zombie_num = 0;
         score = 0;
-        sunny_energy = 100;
         State = READY;
         second = 0;
         start_Gaming_flag = false;
@@ -117,8 +131,12 @@ public:
             }
             usleep(15000);
             second += 1;
-            if(second % 10 == 0){
-                map.update(second/10);
+            if(second % 10 == 0 && State == GAMING){
+                bool flag = map.update(second/10);
+                if(flag == true){
+                    map.MapInit();
+                    State = ENDING;
+                }
             }
         }
     };

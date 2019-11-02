@@ -1,3 +1,4 @@
+#pragma once
 #include "Zombie.hpp"
 #include "Const.h"
 
@@ -8,7 +9,7 @@ private:
     static ZombieFactory* ZF;
 public:
     static ZombieFactory* GetZombieFactory(){
-        if(ZF == NULL){
+        if(ZF == nullptr){
             ZF = new ZombieFactory();
         }
         return ZF;
@@ -22,3 +23,4 @@ public:
         return newZom;
     }
 };
+ZombieFactory * ZombieFactory::ZF = nullptr;

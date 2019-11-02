@@ -1,5 +1,8 @@
+#pragma once
+
 #define READY 1
 #define GAMING 2
+#define ENDING 3
 
 #define ROW 4
 #define COLUMN 8
@@ -21,15 +24,16 @@ struct Zombie_time{
     int line;
 };
 
+int TotalZombie = 10;
 Zombie_time Zombie_timing[10] = {
-    {1,NORMAL_ZOMBIE,1},
-    {5,NORMAL_ZOMBIE,2},
-    {10,NORMAL_ZOMBIE,3},
-    {12,NORMAL_ZOMBIE,0},
-    {15,NORMAL_ZOMBIE,2},
-    {18,NORMAL_ZOMBIE,3},
-    {20,NORMAL_ZOMBIE,1},
-    {30,NORMAL_ZOMBIE,0},
-    {39,NORMAL_ZOMBIE,1},
-    {40,NORMAL_ZOMBIE,2}
+    {10,NORMAL_ZOMBIE,1},
+    {50,NORMAL_ZOMBIE,2},
+    {100,NORMAL_ZOMBIE,3},
+    {120,NORMAL_ZOMBIE,0},
+    {150,NORMAL_ZOMBIE,2},
+    {180,NORMAL_ZOMBIE,3},
+    {200,NORMAL_ZOMBIE,1},
+    {300,NORMAL_ZOMBIE,0},
+    {390,NORMAL_ZOMBIE,1},
+    {400,NORMAL_ZOMBIE,2}
 };
