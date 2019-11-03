@@ -98,7 +98,7 @@ private:
             }
         }
         else if(State == GAMING){
-            
+            map.input(y,x);
         }else if(State == ENDING){
             clear();
             State = READY;

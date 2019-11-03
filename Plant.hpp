@@ -27,6 +27,22 @@ public:
         hp = HP;
         name = NAME;
     }
+    Plant(const Plant &plant){
+        type = plant.type;
+        price = plant.price;
+        attack = plant.attack;
+        hp = plant.hp;
+        name = plant.name;
+    }
+
+    Plant& operator = (const Plant& plant){
+        type = plant.type;
+        price = plant.price;
+        attack = plant.attack;
+        hp = plant.hp;
+        name = plant.name;
+    }
+
     string get_name(){
         return name;
     }
@@ -35,6 +51,9 @@ public:
     }
     int get_type(){
         return type;
+    }
+    int get_hp(){
+        return hp;
     }
     int get_price(){
         return price;
@@ -47,7 +66,7 @@ public:
         return false;
     }
     void draw_me(int starty,int startx){
-        mvprintw(starty+3,startx+3,"%s",name);
+        mvprintw(starty+3,startx+3,"%s",name.c_str());
         mvprintw(starty+4,startx+3,"(%d)",hp);
     }
 };

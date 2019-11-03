@@ -5,6 +5,7 @@
 #include <ncurses.h>
 #include <vector>
 #include <algorithm>
+#include <string>
 using namespace std;
 
 bool comp(const Zombie* a,const Zombie* b)
@@ -20,7 +21,10 @@ private:
     int Zombie_num;
     int order_Zombie;
     Button **blocks;
+    Plant ***Plants;
     vector<Zombie*> **Zombies;
+    bool if_buy;
+    Plant *buy_plant;
     void draw_box(int starty,int startx)
     {
         mvprintw(starty  ,startx,"**************************");
@@ -41,16 +45,20 @@ public:
         Zombie_num = 0;
         order_Zombie = 0;
         Zombies = new vector<Zombie*>*[row];
+        Plants = new Plant**[row];
+        if_buy = false;
         for(int i = 0; i < row;i++){
             blocks[i] = new Button[column]; 
             Zombies[i] = new vector<Zombie*>[column];
-        } 
+            Plants[i] = new Plant*[column];
+        }
         for(int i = 0; i < row; i++){
             for(int j = 0; j < column; j++){
                 blocks[i][j].starty = 8*i;
                 blocks[i][j].endy = 8*i + 8;
                 blocks[i][j].startx = 25*j;
-                blocks[i][j].endy = 25*j + 25;
+                blocks[i][j].endx = 25*j + 25;
+                Plants[i][j] = NULL;
             }
         }
         sunny_energy = 100;
@@ -74,6 +82,10 @@ public:
                 }
                 else{
                     draw_box(blocks[i][j].starty,blocks[i][j].startx);
+                }
+                if(Plants[i][j] != NULL){
+                    mvprintw(blocks[i][j].starty+2,blocks[i][j].startx+1,"%s",Plants[i][j]->get_name().c_str());
+                    mvprintw(blocks[i][j].starty+3,blocks[i][j].startx+1,"hp:%d",Plants[i][j]->get_hp());
                 }
             }
         }
@@ -110,6 +122,10 @@ public:
     void MapInit(){
         for(int i = 0; i < row; i++){
             for(int j = 0; j < column; j++){
+                if(Plants[i][j] != NULL){
+                    delete(Plants[i][j]);
+                    Plants[i][j] = NULL;
+                }
                 for(int k = 0; k < Zombies[i][j].size();k++){
                     delete Zombies[i][j][k];
                 }
@@ -118,5 +134,38 @@ public:
         }
         order_Zombie = 0;
         sunny_energy = 100;
-    }
+    };
+    void input(int y,int x){
+        PlantStore *PS = PlantStore::GetPlantStore();
+        if(if_buy == false){
+            buy_plant = PS->BuyPlant(y,x);
+            if(buy_plant != NULL)
+            if_buy = true;
+            return;
+        }
+        else{
+            for(int i = 0; i < row;i++){
+                for(int j = 0; j < column;j++){
+                    if( y >= blocks[i][j].starty && y <= blocks[i][j].endy && x >= blocks[i][j].startx && x <= blocks[i][j].endx){
+                        if(Plants[i][j] == NULL){
+                            Plant* NewPlant = (Plant*)malloc(sizeof(Plant));
+                            *NewPlant = *buy_plant;
+                            Plants[i][j] = NewPlant;
+                            sunny_energy -= NewPlant->get_price();
+                        }
+                        else{
+                            mvprintw(40,5,"there is a plant already!!");
+                        }
+                        PS->ResetChosen();
+                        buy_plant = NULL;
+                        if_buy = false;
+                        return;
+                    }
+                }
+            }
+        }
+        PS->ResetChosen();
+        buy_plant = NULL;
+        if_buy = false;
+    };
 };
