@@ -11,6 +11,20 @@
 
 #define NORMAL_ZOMBIE 1
 
+#define SUNNY_PLANT 1
+#define ATTACK_PLANT 2
+#define HANHAN_PLANT 3
+#define EARTH_PLANT 4
+
+
+struct bullet{
+    bool valid;
+    int row;
+    int col;
+    int local;
+    int attack;
+};
+
 struct Button{
     int startx;
     int endx;

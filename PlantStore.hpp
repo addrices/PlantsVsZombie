@@ -1,3 +1,4 @@
+#pragma once
 #include "Plant.hpp"
 #include <ncurses.h>
 #include "Const.h"
@@ -12,8 +13,8 @@ private:
     PlantStore(){
         PlantNum = 2;
         Plants = new Plant*[2];
-        Plants[0] = new Plant(SUNNY_PLANT,25,0,100,"sunflower");
-        Plants[1] = new Plant(ATTACK_PLANT,25,20,100,"peashooter");
+        Plants[0] = new Plant(SUNNY_PLANT,25,0,100,"sunflower",5,0);
+        Plants[1] = new Plant(ATTACK_PLANT,25,20,100,"peashooter",0,10);
         Solds = new Button[PlantNum];
         for(int i = 0;i < PlantNum;i++){
             Solds[i].startx = 5+13*i;

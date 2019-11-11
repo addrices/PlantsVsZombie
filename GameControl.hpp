@@ -7,7 +7,6 @@
 class GameControl{
 private:
     int Zombie_num;
-    int score;
     Map map;
     int State;
     int second;
@@ -76,7 +75,6 @@ private:
             wrefresh(ending_win);
             mvprintw(starty+1,startx+3,"Game Over");
             mvprintw(starty+2,startx+3,"Click to return");
-            mvprintw(starty+3,startx+3,"score:%d",score);
 
         }
         refresh();
@@ -107,7 +105,6 @@ private:
 public:
     GameControl():map(ROW,COLUMN){
         Zombie_num = 0;
-        score = 0;
         State = READY;
         second = 0;
         start_Gaming_flag = false;

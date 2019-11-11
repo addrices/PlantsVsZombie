@@ -15,6 +15,7 @@ bool comp(const Zombie* a,const Zombie* b)
 
 class Map{
 private:
+    int score;
     int sunny_energy;
     int row;
     int column;
@@ -25,6 +26,7 @@ private:
     vector<Zombie*> **Zombies;
     bool if_buy;
     Plant *buy_plant;
+    vector<bullet> bullets;
     void draw_box(int starty,int startx)
     {
         mvprintw(starty  ,startx,"**************************");
@@ -62,6 +64,7 @@ public:
             }
         }
         sunny_energy = 100;
+        score = 0;
     };
     void show_init(){
         for(int i = 0; i < row; i++){
@@ -89,7 +92,13 @@ public:
                 }
             }
         }
+
+        for(int i = 0; i < bullets.size();i++){
+            mvprintw(bullets[i].row*8+4,bullets[i].col*25+(bullets[i].local),"O");
+        }
         PlantStore::GetPlantStore()->draw_store();
+        mvprintw(35,50,"sunny:%d      ",sunny_energy);
+        mvprintw(36,50,"score:%d      ",score);
         refresh();
     };
     bool update(int sec){
@@ -114,6 +123,33 @@ public:
                             Zombies[i][j].erase(Zombies[i][j].begin()+k);
                         }
                     }
+                }
+                if(Plants[i][j] != NULL && Plants[i][j]->get_type() == SUNNY_PLANT){
+                    sunny_energy += Plants[i][j]->get_sunny();
+                }
+                else if(Plants[i][j] != NULL && Plants[i][j]->get_type() == ATTACK_PLANT){
+                    bullet b = Plants[i][j]->shot();
+                    if(b.valid == true)
+                        bullets.push_back(b);
+                }
+            }
+        }
+
+        for(int i = 0; i < bullets.size();i++){
+            bullets[i].local += 8;
+            if(bullets[i].local >= 25){
+                bullets[i].local -= 25;
+                bullets[i].col++;
+                if(bullets[i].col > 7){
+                    bullets.erase(bullets.begin()+i);
+                }
+                if(Zombies[bullets[i].row][bullets[i].col].size() != 0){
+                    if(Zombies[bullets[i].row][bullets[i].col][0]->hurted(bullets[i].attack) == true){
+                        delete(Zombies[bullets[i].row][bullets[i].col][0]);
+                        Zombies[bullets[i].row][bullets[i].col].erase(Zombies[bullets[i].row][bullets[i].col].begin());
+                    }
+                    bullets.erase(bullets.begin()+i);
+                    i--;
                 }
             }
         }
@@ -147,14 +183,19 @@ public:
             for(int i = 0; i < row;i++){
                 for(int j = 0; j < column;j++){
                     if( y >= blocks[i][j].starty && y <= blocks[i][j].endy && x >= blocks[i][j].startx && x <= blocks[i][j].endx){
-                        if(Plants[i][j] == NULL){
+                        if(Plants[i][j] == NULL && sunny_energy >= buy_plant->get_price()){
                             Plant* NewPlant = (Plant*)malloc(sizeof(Plant));
                             *NewPlant = *buy_plant;
                             Plants[i][j] = NewPlant;
+                            Plants[i][j]->plant(i,j);
                             sunny_energy -= NewPlant->get_price();
+                            mvprintw(40,5,"                          ");
                         }
-                        else{
+                        else if(Plants[i][j] != NULL){
                             mvprintw(40,5,"there is a plant already!!");
+                        }
+                        else if(sunny_energy < buy_plant->get_price()){
+                            mvprintw(40,5,"lack sunny!!              ");
                         }
                         PS->ResetChosen();
                         buy_plant = NULL;
@@ -169,3 +210,4 @@ public:
         if_buy = false;
     };
 };
+

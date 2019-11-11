@@ -21,6 +21,7 @@ public:
         speed = 10;
         block_local = 0;
         attack = 2;
+        health = 100;
     };
     bool hurted(int damage){
         if(Item != NULL){
