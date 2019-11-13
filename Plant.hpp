@@ -1,11 +1,11 @@
 #pragma once
 #include <ncurses.h>
 #include "Const.h"
-
+#include <string.h>
 
 class Plant{
 protected:
-    string name;
+    char name[15];
     int price;
     int hp;
     int type;
@@ -17,12 +17,12 @@ protected:
     int shot_speed;
     int shot_count;
 public:
-    Plant(int TYPE,int PRICE,int ATTACK,int HP,string NAME,int PRODUCTSPEED,int SHOTSPEED){
+    Plant(int TYPE,int PRICE,int ATTACK,int HP,const char* NAME,int PRODUCTSPEED,int SHOTSPEED){
         type = TYPE;
         price = PRICE;
         attack = ATTACK;
         hp = HP;
-        name = NAME;
+        strcpy(name,NAME);
         col = -1;
         row = -1;
         product_speed = PRODUCTSPEED;
@@ -35,7 +35,7 @@ public:
         price = plant.price;
         attack = plant.attack;
         hp = plant.hp;
-        name = plant.name;
+        strcpy(name,plant.name);
         col = plant.col;
         row = plant.row;
         product_speed = plant.product_speed;
@@ -53,7 +53,7 @@ public:
         product_speed = plant.product_speed;
         shot_speed = plant.shot_speed;
         shot_count = 0;
-        name = plant.name;
+        strcpy(name,plant.name);
     }
 
     string get_name(){
@@ -79,7 +79,7 @@ public:
         return false;
     }
     void draw_me(int starty,int startx){
-        mvprintw(starty+3,startx+3,"%s",name.c_str());
+        mvprintw(starty+3,startx+3,"%s",name);
         mvprintw(starty+4,startx+3,"(%d)",hp);
     }
     void plant(int r,int c){
