@@ -11,10 +11,14 @@ private:
     int chosen;
     Button *Solds;
     PlantStore(){
-        PlantNum = 2;
-        Plants = new Plant*[2];
-        Plants[0] = new Plant(SUNNY_PLANT,25,0,100,"sunflower",5,0);
-        Plants[1] = new Plant(ATTACK_PLANT,25,20,100,"peashooter",0,10);
+        PlantNum = 6;
+        Plants = new Plant*[PlantNum];
+        Plants[0] = new SunFlower();
+        Plants[1] = new PeaShooter();
+        Plants[2] = new ColdPeaShooter();
+        Plants[3] = new Potato();
+        Plants[4] = new BigPotato();
+        Plants[5] = new Garlic();
         Solds = new Button[PlantNum];
         for(int i = 0;i < PlantNum;i++){
             Solds[i].startx = 5+13*i;
@@ -80,6 +84,10 @@ public:
             }
         }
         return NULL;
+    }
+
+    Plant* NewPlant(Plant* p){
+        Plant* q = p->copy_me();
     }
 
     void ResetChosen(){

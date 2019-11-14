@@ -15,7 +15,7 @@
 #define ATTACK_PLANT 2
 #define HANHAN_PLANT 3
 #define EARTH_PLANT 4
-
+#define GARLIC_PLANT 5
 
 struct bullet{
     bool valid;
@@ -23,6 +23,7 @@ struct bullet{
     int col;
     int local;
     int attack;
+    bool cold;
 };
 
 struct Button{

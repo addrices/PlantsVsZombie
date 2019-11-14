@@ -11,6 +11,7 @@ private:
     item* Item;
     int speed;
     int health;
+    bool cold;
 public:
     int block_local;
     Zombie(int Nrow,int Ncol){
@@ -22,6 +23,7 @@ public:
         block_local = 0;
         attack = 2;
         health = 100;
+        cold = false;
     };
     bool hurted(int damage){
         if(Item != NULL){
@@ -31,6 +33,7 @@ public:
                 return true;
         }
         else{
+            
             health -= damage;
             if(health <= 0)
                 return true;
@@ -39,6 +42,10 @@ public:
         }
     };
     bool walk(){
+        if(cold == true){
+            cold = false;
+            return false;
+        }
         block_local += speed;        
         col_local = col_local - 1;
         if(block_local >= 500){
@@ -58,5 +65,8 @@ public:
     };
     string get_name(){
         return name;
+    }
+    void freezed(){
+        cold = true;
     }
 };

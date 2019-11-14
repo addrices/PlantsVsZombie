@@ -12,12 +12,8 @@ protected:
     int attack;
     int col;
     int row;
-    int product_speed;
-    int product_count;
-    int shot_speed;
-    int shot_count;
 public:
-    Plant(int TYPE,int PRICE,int ATTACK,int HP,const char* NAME,int PRODUCTSPEED,int SHOTSPEED){
+    Plant(int TYPE,int PRICE,int ATTACK,int HP,const char* NAME){
         type = TYPE;
         price = PRICE;
         attack = ATTACK;
@@ -25,10 +21,6 @@ public:
         strcpy(name,NAME);
         col = -1;
         row = -1;
-        product_speed = PRODUCTSPEED;
-        product_count = 0;
-        shot_count = 0;
-        shot_speed = SHOTSPEED;
     }
     Plant(const Plant &plant){
         type = plant.type;
@@ -38,9 +30,6 @@ public:
         strcpy(name,plant.name);
         col = plant.col;
         row = plant.row;
-        product_speed = plant.product_speed;
-        shot_speed = plant.shot_speed;
-        shot_count = 0;
     }
 
     Plant& operator = (const Plant& plant){
@@ -50,9 +39,6 @@ public:
         hp = plant.hp;
         col = plant.col;
         row = plant.row;
-        product_speed = plant.product_speed;
-        shot_speed = plant.shot_speed;
-        shot_count = 0;
         strcpy(name,plant.name);
     }
 
@@ -86,6 +72,29 @@ public:
         col = c;
         row = r;
     }
+    virtual int get_sunny(){
+        return 0;
+    };
+    virtual bullet shot(){
+        bullet b;
+        b.valid = false;
+        return b;
+    };
+    virtual Plant* copy_me() = 0;
+};
+
+class SunFlower: public Plant{
+    int product_count;
+    int product_speed;
+public:
+    SunFlower():Plant(SUNNY_PLANT,25,0,100,"sunflower"){
+        product_count = 0;
+        product_speed = 10;
+    };
+    SunFlower(const SunFlower &plant):Plant(SUNNY_PLANT,25,0,100,"sunflower"){
+        product_count = plant.product_count;
+        product_speed = plant.product_speed;
+    }
     int get_sunny(){
         if(product_count < product_speed){
             product_count++;
@@ -95,7 +104,38 @@ public:
             return 1;
         }
     };
-    bullet shot(){
+    Plant* copy_me(){
+        SunFlower* np = new SunFlower();
+        return np;
+    }
+    SunFlower& operator = (const SunFlower& plant){
+        type = plant.type;
+        price = plant.price;
+        attack = plant.attack;
+        hp = plant.hp;
+        col = plant.col;
+        row = plant.row;
+        strcpy(name,plant.name);
+        product_count = plant.product_count;
+        product_speed = plant.product_speed;
+    }
+};
+
+class PeaShooter: public Plant{
+protected:
+    int shot_speed;
+    int shot_count;
+public:
+    PeaShooter():Plant(ATTACK_PLANT,25,20,100,"peashooter"){
+        shot_speed = 10;
+        shot_count = 0;
+    };
+    PeaShooter(const PeaShooter &plant):Plant(ATTACK_PLANT,25,20,100,"peashooter"){
+        shot_count = plant.shot_count;
+        shot_speed = plant.shot_speed;
+    }
+
+    virtual bullet shot(){
         if(type == ATTACK_PLANT && shot_speed!= 0){
             shot_count++;
             bullet b;
@@ -103,6 +143,7 @@ public:
             b.col = col;
             b.row = row;
             b.local = 12;
+            b.cold = false;
             if(shot_count >= shot_speed){
                 b.valid = true;
                 shot_count -= shot_speed;
@@ -117,44 +158,81 @@ public:
             return b;
         }
     }
+    Plant* copy_me(){
+        PeaShooter* np = new PeaShooter();
+        return np;
+    }
+    PeaShooter& operator = (const PeaShooter& plant){
+        type = plant.type;
+        price = plant.price;
+        attack = plant.attack;
+        hp = plant.hp;
+        col = plant.col;
+        row = plant.row;
+        strcpy(name,plant.name);
+        shot_count = plant.shot_count;
+        shot_speed = plant.shot_speed;
+    }
 };
 
-// class SunFlower: public Plant{
-// public:
-//     SunFlower():Plant(SUNNY_PLANT,25,0,100,"sunflower"){
-//         ProductSunny = 2;
-//     };
-//     int get_sunny(){
-//         return ProductSunny;
-//     };
-//     Plant& operator = (const SunFlower& plant){
-//         type = plant.type;
-//         price = plant.price;
-//         attack = plant.attack;
-//         hp = plant.hp;
-//         name = plant.name;
-//     }
-// };
 
-// class PeaShooter: public Plant{
-// int shot_speed;
-// int shot_count;
-// public:
-//     PeaShooter():Plant(ATTACK_PLANT,25,20,100,"peashooter"){
-//         shot_speed = 10;
-//         shot_count = 0;
-//     };
-//     bullet shot(){
-//         bullet b;
-//         b.attack = attack;
-//         b.col = col;
-//         b.row = row;
-//         b.local = 50;
-//         if(shot_count == shot_speed){
-//             b.valid = true;
-//         }
-//         else
-//             b.valid = false;
-//         return b;
-//     }
-// };
+class Potato : public Plant{
+public:
+    Potato():Plant(HANHAN_PLANT,15,0,800,"patato"){};
+    Plant* copy_me(){
+        Potato* np = new Potato();
+        return np;
+    }
+};
+
+class BigPotato : public Plant{
+public:
+    BigPotato():Plant(HANHAN_PLANT,25,0,1500,"bigpatato"){};
+    Plant* copy_me(){
+        BigPotato* np = new BigPotato();
+        return np;
+    }
+};
+
+class Garlic :public Plant{
+public:
+    Garlic():Plant(GARLIC_PLANT,50,0,100,"garlic"){};
+    Plant* copy_me(){
+        Garlic* np = new Garlic();
+        return np;
+    }
+};
+
+class ColdPeaShooter : public PeaShooter{
+public:
+    ColdPeaShooter():PeaShooter(){
+        strcpy(name,"Cpeashooter");
+    };
+    virtual bullet shot(){
+        if(type == ATTACK_PLANT && shot_speed!= 0){
+            shot_count++;
+            bullet b;
+            b.attack = attack;
+            b.col = col;
+            b.row = row;
+            b.local = 12;
+            b.cold = false;
+            if(shot_count >= shot_speed){
+                b.valid = true;
+                shot_count -= shot_speed;
+            }
+            else
+                b.valid = false;
+            return b;
+        }
+        else{
+            bullet b;
+            b.valid = false;
+            return b;
+        }
+    }
+    Plant* copy_me(){
+        ColdPeaShooter* np = new ColdPeaShooter();
+        return np;
+    }    
+};

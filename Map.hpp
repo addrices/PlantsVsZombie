@@ -97,8 +97,8 @@ public:
             mvprintw(bullets[i].row*8+4,bullets[i].col*25+(bullets[i].local),"O");
         }
         PlantStore::GetPlantStore()->draw_store();
-        mvprintw(35,50,"sunny:%d      ",sunny_energy);
-        mvprintw(36,50,"score:%d      ",score);
+        mvprintw(33,10,"sunny:%d      ",sunny_energy);
+        mvprintw(34,10,"score:%d      ",score);
         refresh();
     };
     bool update(int sec){
@@ -111,7 +111,14 @@ public:
         for(int i = 0; i < row; i++){
             for(int j = 0; j < column; j++){
                 for(int k = 0; k < Zombies[i][j].size(); k++){
-                    if(Zombies[i][j][k]->walk() == true){
+                    if(Plants[i][j] != NULL){
+                        if(Plants)
+                        if(Plants[i][j]->attacked(Zombies[i][j][k]->get_attack()) == true){
+                            delete(Plants[i][j]);
+                            Plants[i][j] = NULL;
+                        }
+                    }
+                    else if(Zombies[i][j][k]->walk() == true){
                         if(j == 0){
                             delete Zombies[i][j][k];
                             Zombies[i][j].erase(Zombies[i][j].begin()+k);
@@ -122,6 +129,7 @@ public:
                             Zombies[i][j-1].push_back(Zombies[i][j][k]);
                             Zombies[i][j].erase(Zombies[i][j].begin()+k);
                         }
+
                     }
                 }
                 if(Plants[i][j] != NULL && Plants[i][j]->get_type() == SUNNY_PLANT){
@@ -147,6 +155,9 @@ public:
                     if(Zombies[bullets[i].row][bullets[i].col][0]->hurted(bullets[i].attack) == true){
                         delete(Zombies[bullets[i].row][bullets[i].col][0]);
                         Zombies[bullets[i].row][bullets[i].col].erase(Zombies[bullets[i].row][bullets[i].col].begin());
+                    }
+                    if(bullets[i].cold == true){
+                        Zombies[bullets[i].row][bullets[i].col][0]->freezed();
                     }
                     bullets.erase(bullets.begin()+i);
                     i--;
@@ -184,8 +195,7 @@ public:
                 for(int j = 0; j < column;j++){
                     if( y >= blocks[i][j].starty && y <= blocks[i][j].endy && x >= blocks[i][j].startx && x <= blocks[i][j].endx){
                         if(Plants[i][j] == NULL && sunny_energy >= buy_plant->get_price()){
-                            Plant* NewPlant = (Plant*)malloc(sizeof(Plant));
-                            *NewPlant = *buy_plant;
+                            Plant* NewPlant = buy_plant->copy_me();
                             Plants[i][j] = NewPlant;
                             Plants[i][j]->plant(i,j);
                             sunny_energy -= NewPlant->get_price();
