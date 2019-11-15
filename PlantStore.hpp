@@ -11,7 +11,7 @@ private:
     int chosen;
     Button *Solds;
     PlantStore(){
-        PlantNum = 6;
+        PlantNum = 10;
         Plants = new Plant*[PlantNum];
         Plants[0] = new SunFlower();
         Plants[1] = new PeaShooter();
@@ -19,6 +19,10 @@ private:
         Plants[3] = new Potato();
         Plants[4] = new BigPotato();
         Plants[5] = new Garlic();
+        Plants[6] = new FastPeaShooter();
+        Plants[7] = new DoublePeaShooter();
+        Plants[8] = new PumpkinBoom();
+        Plants[9] = new ChiliBoom();
         Solds = new Button[PlantNum];
         for(int i = 0;i < PlantNum;i++){
             Solds[i].startx = 5+13*i;

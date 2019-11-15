@@ -81,6 +81,13 @@ public:
         return b;
     };
     virtual Plant* copy_me() = 0;
+    virtual bool IfBoom(){
+        return false;
+    };
+    virtual int get_BoomScope(){
+        return 0;
+    };
+
 };
 
 class SunFlower: public Plant{
@@ -207,6 +214,43 @@ class ColdPeaShooter : public PeaShooter{
 public:
     ColdPeaShooter():PeaShooter(){
         strcpy(name,"Cpeashooter");
+        price = 30;
+    };
+    virtual bullet shot(){
+        if(type == ATTACK_PLANT && shot_speed!= 0){
+            shot_count++;
+            bullet b;
+            b.attack = attack;
+            b.col = col;
+            b.row = row;
+            b.local = 12;
+            b.cold = true;
+            if(shot_count >= shot_speed){
+                b.valid = true;
+                shot_count -= shot_speed;
+            }
+            else
+                b.valid = false;
+            return b;
+        }
+        else{
+            bullet b;
+            b.valid = false;
+            return b;
+        }
+    }
+    Plant* copy_me(){
+        ColdPeaShooter* np = new ColdPeaShooter();
+        return np;
+    }    
+};
+
+class FastPeaShooter : public PeaShooter{
+public:
+    FastPeaShooter():PeaShooter(){
+        strcpy(name,"Fpeashooter");
+        shot_speed = 4;
+        price = 50;
     };
     virtual bullet shot(){
         if(type == ATTACK_PLANT && shot_speed!= 0){
@@ -232,7 +276,103 @@ public:
         }
     }
     Plant* copy_me(){
-        ColdPeaShooter* np = new ColdPeaShooter();
+        FastPeaShooter* np = new FastPeaShooter();
+        return np;
+    }    
+};
+
+class DoublePeaShooter : public PeaShooter{
+int flag;
+public:
+    DoublePeaShooter():PeaShooter(){
+        strcpy(name,"Dpeashooter");
+        price = 50;
+        flag = false;
+    };
+    virtual bullet shot(){
+        if(flag == true){
+            shot_count++;
+            bullet b;
+            b.attack = attack;
+            b.col = col;
+            b.row = (row+1)%ROW;
+            b.local = 12;
+            b.cold = false;
+            b.valid = true;
+            flag = false;
+            return b; 
+        }
+        if(type == ATTACK_PLANT && shot_speed!= 0){
+            shot_count++;
+            bullet b;
+            b.attack = attack;
+            b.col = col;
+            b.row = row;
+            b.local = 12;
+            b.cold = false;
+            if(shot_count >= shot_speed){
+                b.valid = true;
+                shot_count -= shot_speed;
+                flag = true;
+
+            }
+            else
+                b.valid = false;
+            return b;
+        }
+        else{
+            bullet b;
+            b.valid = false;
+            return b;
+        }
+    }
+    Plant* copy_me(){
+        DoublePeaShooter* np = new DoublePeaShooter();
+        return np;
+    }    
+};
+
+class PumpkinBoom : public Plant{
+int count;
+int BoomScope;
+public:
+    PumpkinBoom():Plant(BOOM_PLANT,25,300,300,"PumpkinBoom"){
+        BoomScope = BLOCK_BOOM;
+        count = 3;
+    }
+    bool IfBoom(){
+        if(count == 0)
+            return true;
+        count--;
+        return false;
+    }
+    int get_BoomScope(){
+        return BoomScope;
+    }
+    Plant* copy_me(){
+        PumpkinBoom* np = new PumpkinBoom();
+        return np;
+    }    
+};
+
+class ChiliBoom : public Plant{
+int count;
+int BoomScope;
+public:
+    ChiliBoom():Plant(BOOM_PLANT,55,300,300,"ChiliBoom"){
+        BoomScope = LINE_BOOM;
+    }
+    int get_BoomScope(){
+        return BoomScope;
+    }
+    bool IfBoom(){
+        if(count == 0)
+            return true;
+        count--;
+        return false;
+    }
+    Plant* copy_me(){
+        ChiliBoom* np = new ChiliBoom();
         return np;
     }    
 };

@@ -16,6 +16,11 @@
 #define HANHAN_PLANT 3
 #define EARTH_PLANT 4
 #define GARLIC_PLANT 5
+#define BOOM_PLANT 6
+
+#define BLOCK_BOOM 1
+#define LINE_BOOM 2
+#define NINE_BOOM 3
 
 struct bullet{
     bool valid;

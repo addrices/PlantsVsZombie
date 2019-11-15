@@ -63,7 +63,7 @@ public:
                 Plants[i][j] = NULL;
             }
         }
-        sunny_energy = 100;
+        sunny_energy = 500;
         score = 0;
     };
     void show_init(){
@@ -112,7 +112,10 @@ public:
             for(int j = 0; j < column; j++){
                 for(int k = 0; k < Zombies[i][j].size(); k++){
                     if(Plants[i][j] != NULL){
-                        if(Plants)
+                        if(Plants[i][j]->get_type() == GARLIC_PLANT){
+                            Zombies[(i+1)%4][j].push_back(Zombies[i][j][k]);
+                            Zombies[i][j].erase(Zombies[i][j].begin()+k);
+                        }
                         if(Plants[i][j]->attacked(Zombies[i][j][k]->get_attack()) == true){
                             delete(Plants[i][j]);
                             Plants[i][j] = NULL;
@@ -139,6 +142,22 @@ public:
                     bullet b = Plants[i][j]->shot();
                     if(b.valid == true)
                         bullets.push_back(b);
+                }
+                else if(Plants[i][j] != NULL && Plants[i][j]->get_type() == BOOM_PLANT){
+                    if(Plants[i][j]->IfBoom() == true){
+                        switch(Plants[i][j]->get_BoomScope()){
+                            case BLOCK_BOOM: boom(Plants[i][j]->get_attack(),i,j); 
+                                            delete(Plants[i][j]);
+                                            Plants[i][j] = NULL;                                
+                                            break;
+                            case LINE_BOOM: for(int k = 0;k < COLUMN;k++){
+                                                boom(Plants[i][j]->get_attack(),i,k);
+                                            }
+                                            delete(Plants[i][j]);
+                                            Plants[i][j] = NULL;
+                                            break;
+                        }
+                    }
                 }
             }
         }
@@ -180,7 +199,7 @@ public:
             }
         }
         order_Zombie = 0;
-        sunny_energy = 100;
+        sunny_energy = 500;
     };
     void input(int y,int x){
         PlantStore *PS = PlantStore::GetPlantStore();
@@ -219,5 +238,14 @@ public:
         buy_plant = NULL;
         if_buy = false;
     };
+
+    void boom(int attack,int row,int col){
+        for(int i = 0; i < Zombies[row][col].size();i++){
+            if(Zombies[row][col][i]->hurted(attack) == true){
+                delete Zombies[row][col][i];
+                Zombies[row][col].erase(Zombies[row][col].begin()+i);
+            }
+        }
+    }
 };
 
