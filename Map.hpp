@@ -80,14 +80,18 @@ public:
                 sort(Zombies[i][j].begin(),Zombies[i][j].end(),comp);
                 if(Zombies[i][j].size() != 0){
                     draw_box(blocks[i][j].starty,blocks[i][j].startx);             
-                    mvprintw(blocks[i][j].starty+2,blocks[i][j].startx+12,"%s",Zombies[i][j][0]->get_name().c_str());
-                    mvprintw(blocks[i][j].starty+3,blocks[i][j].startx+12,"(%d)",Zombies[i][j].size());
+                    mvprintw(blocks[i][j].starty+2,blocks[i][j].startx+12,"%s",Zombies[i][j][0]->get_name());
+                    if(Zombies[i][j][0]->get_description() != NULL)
+                        mvprintw(blocks[i][j].starty+3,blocks[i][j].startx+12,"%s",Zombies[i][j][0]->get_description());
+                    else
+                        mvprintw(blocks[i][j].starty+3,blocks[i][j].startx+12,"NO ITEM",Zombies[i][j][0]->get_description());
+                    mvprintw(blocks[i][j].starty+4,blocks[i][j].startx+12,"(%d)",Zombies[i][j].size());
                 }
                 else{
                     draw_box(blocks[i][j].starty,blocks[i][j].startx);
                 }
                 if(Plants[i][j] != NULL){
-                    mvprintw(blocks[i][j].starty+2,blocks[i][j].startx+1,"%s",Plants[i][j]->get_name().c_str());
+                    mvprintw(blocks[i][j].starty+2,blocks[i][j].startx+1,"%s",Plants[i][j]->get_name());
                     mvprintw(blocks[i][j].starty+3,blocks[i][j].startx+1,"hp:%d",Plants[i][j]->get_hp());
                 }
             }
@@ -125,14 +129,33 @@ public:
                         if(j == 0){
                             delete Zombies[i][j][k];
                             Zombies[i][j].erase(Zombies[i][j].begin()+k);
-                            //DEAD
                             return true;
                         }
                         else{
                             Zombies[i][j-1].push_back(Zombies[i][j][k]);
                             Zombies[i][j].erase(Zombies[i][j].begin()+k);
                         }
+                    }
 
+                    if(Zombies[i][j][k]->get_type() == DANCE_ZOMBIE){
+                        if(Zombies[i][j][k]->CallZom() == true){
+                            if(j < COLUMN-1){
+                                Zombie* Z = new Zombie(i,j+1);
+                                Zombies[i][j+1].push_back(Z);
+                            }
+                            if(j > 0){
+                                Zombie* Z = new Zombie(i,j-1);
+                                Zombies[i][j-1].push_back(Z);
+                            }
+                            if(i > 0){
+                                Zombie* Z = new Zombie(i-1,j);
+                                Zombies[i-1][j+1].push_back(Z);
+                            }
+                            if(i < ROW-1){
+                                Zombie* Z = new Zombie(i,j+1);
+                                Zombies[i+1][j].push_back(Z);
+                            }
+                        }
                     }
                 }
                 if(Plants[i][j] != NULL && Plants[i][j]->get_type() == SUNNY_PLANT){
@@ -172,6 +195,7 @@ public:
                 }
                 if(Zombies[bullets[i].row][bullets[i].col].size() != 0){
                     if(Zombies[bullets[i].row][bullets[i].col][0]->hurted(bullets[i].attack) == true){
+                        score += Zombies[bullets[i].row][bullets[i].col][0]->get_score();
                         delete(Zombies[bullets[i].row][bullets[i].col][0]);
                         Zombies[bullets[i].row][bullets[i].col].erase(Zombies[bullets[i].row][bullets[i].col].begin());
                     }
@@ -242,6 +266,7 @@ public:
     void boom(int attack,int row,int col){
         for(int i = 0; i < Zombies[row][col].size();i++){
             if(Zombies[row][col][i]->hurted(attack) == true){
+                score += Zombies[row][col][i]->get_score();
                 delete Zombies[row][col][i];
                 Zombies[row][col].erase(Zombies[row][col].begin()+i);
             }

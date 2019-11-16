@@ -40,9 +40,10 @@ public:
         col = plant.col;
         row = plant.row;
         strcpy(name,plant.name);
+        return *this;
     }
 
-    string get_name(){
+    char* get_name(){
         return name;
     }
     int get_attack(){
@@ -125,6 +126,7 @@ public:
         strcpy(name,plant.name);
         product_count = plant.product_count;
         product_speed = plant.product_speed;
+        return *this;
     }
 };
 
@@ -179,6 +181,7 @@ public:
         strcpy(name,plant.name);
         shot_count = plant.shot_count;
         shot_speed = plant.shot_speed;
+        return *this;
     }
 };
 

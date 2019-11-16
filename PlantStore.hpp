@@ -75,7 +75,7 @@ public:
                 draw_box(starty,startx,true);
             else
                 draw_box(starty,startx,false);
-            mvprintw(starty+1,startx+3,"%s",Plants[i]->get_name().c_str());
+            mvprintw(starty+1,startx+3,"%s",Plants[i]->get_name());
             mvprintw(starty+2,startx+2,"price:%d",Plants[i]->get_price());
         }
     }
@@ -92,6 +92,7 @@ public:
 
     Plant* NewPlant(Plant* p){
         Plant* q = p->copy_me();
+        return q;
     }
 
     void ResetChosen(){

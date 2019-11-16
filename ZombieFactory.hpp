@@ -18,6 +18,11 @@ public:
         Zombie* newZom;
         switch (identifier){
             case NORMAL_ZOMBIE: newZom = new Zombie(row,col);break;
+            case RB_ZOMBIE: newZom = new RoadBlockZombie(row,col);break;
+            case BUCKET_ZOMBIE: newZom = new BucketZombie(row,col);break;
+            case PAPER_ZOMBIE: newZom = new PaperZombie(row,col);break;
+            case FAST_ZOMBIE: newZom = new FastZombie(row,col);break;
+            case DANCE_ZOMBIE: newZom = new DanceZombie(row,col);break;
             default: newZom = NULL;
         }
         return newZom;

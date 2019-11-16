@@ -10,6 +10,11 @@
 #define WIDTH 200
 
 #define NORMAL_ZOMBIE 1
+#define RB_ZOMBIE 2
+#define BUCKET_ZOMBIE 3
+#define PAPER_ZOMBIE 4
+#define FAST_ZOMBIE 5
+#define DANCE_ZOMBIE 6
 
 #define SUNNY_PLANT 1
 #define ATTACK_PLANT 2
@@ -44,16 +49,20 @@ struct Zombie_time{
     int line;
 };
 
-int TotalZombie = 10;
-Zombie_time Zombie_timing[10] = {
+int TotalZombie = 14;
+Zombie_time Zombie_timing[14] = {
     {10,NORMAL_ZOMBIE,1},
-    {50,NORMAL_ZOMBIE,2},
-    {100,NORMAL_ZOMBIE,3},
-    {120,NORMAL_ZOMBIE,0},
-    {150,NORMAL_ZOMBIE,2},
-    {180,NORMAL_ZOMBIE,3},
+    {50,RB_ZOMBIE,2},
+    {100,BUCKET_ZOMBIE,3},
+    {120,FAST_ZOMBIE,0},
+    {125,FAST_ZOMBIE,0},
+    {150,PAPER_ZOMBIE,2},
+    {180,DANCE_ZOMBIE,2},
     {200,NORMAL_ZOMBIE,1},
-    {300,NORMAL_ZOMBIE,0},
+    {300,BUCKET_ZOMBIE,0},
     {390,NORMAL_ZOMBIE,1},
-    {400,NORMAL_ZOMBIE,2}
+    {450,BUCKET_ZOMBIE,2},
+    {451,BUCKET_ZOMBIE,3},
+    {452,BUCKET_ZOMBIE,0},
+    {458,PAPER_ZOMBIE,3},
 };
