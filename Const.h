@@ -49,14 +49,15 @@ struct Zombie_time{
     int line;
 };
 
-int TotalZombie = 14;
-Zombie_time Zombie_timing[14] = {
+int TotalZombie = 15;
+Zombie_time Zombie_timing[15] = {
     {10,NORMAL_ZOMBIE,1},
-    {50,RB_ZOMBIE,2},
+    {20,DANCE_ZOMBIE,2},
+    {50,RB_ZOMBIE,1},
     {100,BUCKET_ZOMBIE,3},
     {120,FAST_ZOMBIE,0},
     {125,FAST_ZOMBIE,0},
-    {150,PAPER_ZOMBIE,2},
+    {150,PAPER_ZOMBIE,1},
     {180,DANCE_ZOMBIE,2},
     {200,NORMAL_ZOMBIE,1},
     {300,BUCKET_ZOMBIE,0},

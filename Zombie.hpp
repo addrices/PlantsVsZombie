@@ -184,7 +184,7 @@ private:
     int count;
 public:
     DanceZombie(int Nrow,int Ncol): Zombie(Nrow,Ncol){
-        strcpy(name, "FastZombie");
+        strcpy(name, "DanceZombie");
         speed = 8;
         health = 150;
         type = DANCE_ZOMBIE;

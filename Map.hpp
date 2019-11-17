@@ -149,7 +149,7 @@ public:
                             }
                             if(i > 0){
                                 Zombie* Z = new Zombie(i-1,j);
-                                Zombies[i-1][j+1].push_back(Z);
+                                Zombies[i-1][j].push_back(Z);
                             }
                             if(i < ROW-1){
                                 Zombie* Z = new Zombie(i,j+1);
